@@ -1,5 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Files.Commands;
+﻿using Application.Files.Commands;
+using Application.Files.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Infrastructure;
@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Files.CommandHandlers
 {
-    public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand>
+    public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, FileDto>
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ namespace Application.Files.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(DeleteFileCommand request, CancellationToken cancellationToken)
+        public async Task<FileDto> Handle(DeleteFileCommand request, CancellationToken cancellationToken)
         {
             var file = await _context.Files.FindAsync(request.Id);
 
@@ -29,7 +29,7 @@ namespace Application.Files.CommandHandlers
             _context.Files.Remove(file);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return _mapper.Map<FileDto>(file);
         }
     }
 }

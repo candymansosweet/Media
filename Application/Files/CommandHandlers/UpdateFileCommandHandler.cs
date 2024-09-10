@@ -1,5 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Files.Commands;
+﻿using Application.Files.Commands;
+using Application.Files.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Infrastructure;
@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Files.CommandHandlers
 {
-    public class UpdateFileCommandHandler : IRequestHandler<UpdateFileCommand>
+    public class UpdateFileCommandHandler : IRequestHandler<UpdateFileCommand, FileDto>
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ namespace Application.Files.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateFileCommand request, CancellationToken cancellationToken)
+        public async Task<FileDto> Handle(UpdateFileCommand request, CancellationToken cancellationToken)
         {
             var file = await _context.Files.FindAsync(request.Id);
             if (file == null)
@@ -29,7 +29,7 @@ namespace Application.Files.CommandHandlers
             _context.Files.Update(file);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return _mapper.Map<FileDto>(file);
         }
     }
 }

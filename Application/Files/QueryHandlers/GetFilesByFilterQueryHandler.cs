@@ -1,15 +1,15 @@
-﻿using Application.Common.Interfaces;
-using Application.Files.Dto;
+﻿using Application.Files.Dto;
 using Application.Files.Queries;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Models;
 using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Files.QueryHandlers
 {
-    public class GetFilesByFilterQueryHandler : IRequestHandler<GetFilesByFilterQuery, List<FileDto>>
+    public class GetFilesByFilterQueryHandler : IRequestHandler<GetFilesByFilterQuery, PaginatedList<FileDto>>
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace Application.Files.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<List<FileDto>> Handle(GetFilesByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<FileDto>> Handle(GetFilesByFilterQuery request, CancellationToken cancellationToken)
         {
             var query = _context.Files.AsQueryable();
 
@@ -44,9 +44,12 @@ namespace Application.Files.QueryHandlers
                 query = query.Where(f => f.FileUrl.Contains(request.FileUrl));
             }
 
-            return await query
-                .ProjectTo<FileDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+            var paginatedFiles = await PaginatedList<FileDto>.CreateAsync(
+                query.ProjectTo<FileDto>(_mapper.ConfigurationProvider),
+                request.PageIndex,
+                request.PageSize
+            );
+            return paginatedFiles;
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using Application.Common.Mapping;
+using Application.Files.Dto;
+using MediatR;
 
 namespace Application.Files.Commands
 {
-    public class UpdateFileCommand : IRequest
+    public class UpdateFileCommand : IRequest<FileDto>, IMapTo<Domain.Entities.File>
     {
         public int Id { get; set; }
         public Guid OwnerId { get; set; }

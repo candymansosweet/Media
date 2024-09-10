@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unitilities", "Unitilities\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{8219810B-1059-46B7-A39F-5B0CCC67A325}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prodcut.API", "Prodcut.API\Prodcut.API.csproj", "{82A08460-C355-4150-8FEE-C6A5BE063358}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.API", "Prodcut.API\Web.API.csproj", "{82A08460-C355-4150-8FEE-C6A5BE063358}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
