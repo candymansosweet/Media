@@ -28,6 +28,7 @@ namespace Common.Exceptions
         Invalidate = 1,
         Notfound = 2,
         Duplicate = 3,
+        Duplicate = 3,
     }
     public class ErrorDetail
     {
