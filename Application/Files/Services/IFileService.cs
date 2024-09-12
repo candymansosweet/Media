@@ -11,6 +11,8 @@ namespace Application.Files.Services
     public interface IFileService
     {
         Task<string> UploadImage(FileUpload fileDto);
-        byte[]? DownloadFile(FileDownload fileDto);
+        byte[] DownloadFile(FileDownload fileDto);
+
+        Task<string> DeleteFile(string filePath);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Common.Constants;
+﻿using System.Collections.Generic;
+
+namespace Common.Constants;
 public static class Modules
 {
     public const string PM = "PM"; // Product manager 

@@ -16,7 +16,7 @@ namespace Application.Files.Services
         {
             _uploadPath = options.Value.UploadPath;
         }
-        public byte[]? DownloadFile(FileDownload fileDto)
+        public byte[] DownloadFile(FileDownload fileDto)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.FileName);
             if (!System.IO.File.Exists(filePath))
@@ -30,16 +30,26 @@ namespace Application.Files.Services
 
         public async Task<string> UploadImage(FileUpload fileDto)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName ,fileDto.file.FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName);
             // Tạo thư mục nếu chưa tồn tại
-            if (!Directory.Exists(_uploadPath))
+            if (!Directory.Exists(filePath))
             {
-                Directory.CreateDirectory(_uploadPath);
+                Directory.CreateDirectory(filePath);
             }
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await fileDto.file.CopyToAsync(stream);
             }
+            return filePath;
+        }
+        public async Task<string> DeleteFile(string path)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, path);
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new AppException(ExceptionCode.Notfound, "Đường dẫn không đúng");
+            }
+            System.IO.File.Delete(filePath);
             return filePath;
         }
     }

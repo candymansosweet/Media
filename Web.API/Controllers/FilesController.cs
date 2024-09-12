@@ -1,5 +1,6 @@
 ﻿using Application.Files.Dto;
 using Application.Files.Services;
+using Common.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.IO;
@@ -18,31 +19,22 @@ public class FileController : ControllerBase
 
     // Upload file
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(FileUpload file)
+    public async Task<IActionResult> UploadFile([FromForm] FileUpload file)
     {
         return Ok(await _fileService.UploadImage(file));
     }
-
     // Download file
-    [HttpGet("download/{fileName}")]
+    [HttpGet("download")]
     public IActionResult DownloadFile(FileDownload fileDown)
     {
-        byte[]? fileBytes = _fileService.DownloadFile(fileDown);
-        return File(fileBytes?? null, "application/octet-stream", fileDown.FileName);
+        byte[] fileBytes = _fileService.DownloadFile(fileDown);
+        return File(fileBytes, "application/octet-stream", fileDown.FileName);
     }
 
     // Delete file
     [HttpDelete("delete/{fileName}")]
-    public IActionResult DeleteFile(string fileName)
+    public IActionResult DeleteFile(string path)
     {
-        var filePath = Path.Combine(_uploadPath, fileName);
-
-        if (!System.IO.File.Exists(filePath))
-        {
-            return NotFound();
-        }
-
-        System.IO.File.Delete(filePath);
-        return Ok();
+        return Ok(_fileService.DeleteFile(path));
     }
 }

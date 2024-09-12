@@ -25,10 +25,10 @@ namespace Common.Exceptions
     }
     public enum ExceptionCode
     {
-        Invalidate = 1,
-        Notfound = 2,
-        Duplicate = 3,
-        Duplicate = 3,
+        Invalidate = 1, // giá trị không hợp lệ
+        Notfound = 2, // không tìm thấy
+        Duplicate = 3, // trùng lặp
+        //Duplicate = 4, // 
     }
     public class ErrorDetail
     {
