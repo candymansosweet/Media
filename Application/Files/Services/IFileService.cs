@@ -10,8 +10,9 @@ namespace Application.Files.Services
 {
     public interface IFileService
     {
-        Task<string> UploadImage(FileUpload fileDto);
+        Task<string> UploadFile(FileUpload fileDto);
         byte[] DownloadFile(FileDownload fileDto);
+        byte[] DownloadFile(string fileDto);
 
         Task<string> DeleteFile(string filePath);
     }

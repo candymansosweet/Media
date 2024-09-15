@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unitilities.DateTimeUnitilities;
 
 namespace Application.Files.Services
 {
@@ -18,7 +19,19 @@ namespace Application.Files.Services
         }
         public byte[] DownloadFile(FileDownload fileDto)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.FileName);
+            string dateTimeUpload = FormatToString.FormatToPath("dd/MM/yyyy");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload, fileDto.FileName);
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new AppException(ExceptionCode.Notfound, "Đường dẫn không đúng");
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return fileBytes;
+        }
+        public byte[] DownloadFile(string path)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (!System.IO.File.Exists(filePath))
             {
                 throw new AppException(ExceptionCode.Notfound, "Đường dẫn không đúng");
@@ -28,19 +41,23 @@ namespace Application.Files.Services
             return fileBytes;
         }
 
-        public async Task<string> UploadImage(FileUpload fileDto)
+        public async Task<string> UploadFile(FileUpload fileDto)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName);
+            string dateTimeUpload = FormatToString.FormatToPath("dd/MM/yyyy");
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload);
             // Tạo thư mục nếu chưa tồn tại
-            if (!Directory.Exists(filePath))
+            if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(directoryPath); // Chỉ tạo thư mục
             }
+            // Tạo đường dẫn đến file (bao gồm cả tên file)
+            var filePath = Path.Combine(directoryPath, fileDto.file.FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await fileDto.file.CopyToAsync(stream);
             }
-            return filePath;
+            var relativePath = Path.Combine("Uploads", fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload, fileDto.file.FileName).Replace("\\", "/");
+            return relativePath;
         }
         public async Task<string> DeleteFile(string path)
         {

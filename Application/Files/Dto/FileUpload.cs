@@ -7,6 +7,8 @@ namespace Application.Files.Dto
     {
         [FromQuery]
         public string ModuleName { get; set; }
+        [FromQuery]
+        public string ObjectName { get; set; }
         [FromForm]
         public IFormFile file { get; set; }
     }

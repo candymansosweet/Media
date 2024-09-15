@@ -21,14 +21,20 @@ public class FileController : ControllerBase
     [HttpPost("upload")]
     public async Task<IActionResult> UploadFile([FromForm] FileUpload file)
     {
-        return Ok(await _fileService.UploadImage(file));
+        return Ok(await _fileService.UploadFile(file));
     }
     // Download file
-    [HttpGet("download")]
-    public IActionResult DownloadFile(FileDownload fileDown)
+    [HttpGet("download-by-infor")]
+    public IActionResult DownloadFile([FromQuery] FileDownload fileDown)
     {
         byte[] fileBytes = _fileService.DownloadFile(fileDown);
         return File(fileBytes, "application/octet-stream", fileDown.FileName);
+    }
+    [HttpGet("download-by-path")]
+    public IActionResult DownloadFile(string fileDown)
+    {
+        byte[] fileBytes = _fileService.DownloadFile(fileDown);
+        return File(fileBytes, "application/octet-stream", fileDown);
     }
 
     // Delete file

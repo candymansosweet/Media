@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Application.Files.Dto
     public class FileDownload
     {
         public string ModuleName { get; set; }
+        public string ObjectName { get; set; }
         public string FileName { get; set; }
 
     }
