@@ -1,4 +1,5 @@
 ﻿using Application.Files.Dto;
+using Common.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,11 @@ namespace Application.Files.Services
 {
     public interface IFileService
     {
+        Task<PaginatedList<MediaFileDto>> QueryMediaFile(MediaFileQuery fileDto);
         Task<string> UploadFile(FileUpload fileDto);
         byte[] DownloadFile(FileDownload fileDto);
         byte[] DownloadFile(string fileDto);
 
-        Task<string> DeleteFile(string filePath);
+        Task<string> DeleteFile(int id);
     }
 }

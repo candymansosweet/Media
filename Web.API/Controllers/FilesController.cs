@@ -16,6 +16,11 @@ public class FileController : ControllerBase
     {
         _fileService = fileService;
     }
+    [HttpGet]
+    public async Task<IActionResult> QueryMedia([FromQuery] MediaFileQuery mediaFileQuery)
+    {
+        return Ok(await _fileService.QueryMediaFile(mediaFileQuery));
+    }
 
     // Upload file
     [HttpPost("upload")]
@@ -38,9 +43,9 @@ public class FileController : ControllerBase
     }
 
     // Delete file
-    [HttpDelete("delete/{fileName}")]
-    public IActionResult DeleteFile(string path)
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteFile(int id)
     {
-        return Ok(_fileService.DeleteFile(path));
+        return Ok(await _fileService.DeleteFile(id));
     }
 }

@@ -1,21 +1,26 @@
 ﻿using Application.Files.Dto;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Exceptions;
+using Common.Models;
+using Domain.Entities;
+using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unitilities.DateTimeUnitilities;
 
 namespace Application.Files.Services
 {
     public class FileService : IFileService
     {
+        private readonly IMapper _mapper;
         private readonly string _uploadPath;
-        public FileService(IOptions<FileSettings> options) 
+        private readonly AppDbContext _context;
+        public FileService(IOptions<FileSettings> options, AppDbContext context, IMapper mapper)
         {
             _uploadPath = options.Value.UploadPath;
+            _context = context;
+            _mapper = mapper;
         }
         public byte[] DownloadFile(FileDownload fileDto)
         {
@@ -57,17 +62,75 @@ namespace Application.Files.Services
                 await fileDto.file.CopyToAsync(stream);
             }
             var relativePath = Path.Combine("Uploads", fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload, fileDto.file.FileName).Replace("\\", "/");
+            // Lưu thông tin file vào SQL Server
+            var mediaFile = new MediaFile
+            {
+                FileName = fileDto.file.FileName,
+                FilePath = relativePath,
+                FileType = fileDto.file.ContentType,
+                FileSize = fileDto.file.Length,
+                OwnerId = fileDto.OwnerId
+            };
+            _context.MediaFiles.Add(mediaFile);
+            await _context.SaveChangesAsync();
             return relativePath;
         }
-        public async Task<string> DeleteFile(string path)
+        public async Task<string> DeleteFile(int id)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, path);
+            var aaa = _context.MediaFiles;
+            var mediaFile = await _context.MediaFiles.FirstOrDefaultAsync(m => m.Id == id); ;
+            if (mediaFile == null)
+            {
+                throw new AppException(ExceptionCode.Notfound, "Không tìm thấy media");
+            }
+            var path = mediaFile.FilePath.Replace("/", "\\");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (!System.IO.File.Exists(filePath))
             {
                 throw new AppException(ExceptionCode.Notfound, "Đường dẫn không đúng");
             }
             System.IO.File.Delete(filePath);
+            _context.MediaFiles.Remove(mediaFile);
+            await _context.SaveChangesAsync();
             return filePath;
+        }
+
+        public async Task<PaginatedList<MediaFileDto>> QueryMediaFile(MediaFileQuery query)
+        {
+            // Bắt đầu từ truy vấn cơ bản
+            var mediaFilesQuery = _context.MediaFiles.AsQueryable();
+
+            // Lọc theo tên file nếu có
+            if (!string.IsNullOrEmpty(query.FileName))
+            {
+                mediaFilesQuery = mediaFilesQuery.Where(f => f.FileName.Contains(query.FileName));
+            }
+
+            // Lọc theo loại file nếu có
+            if (!string.IsNullOrEmpty(query.FileType))
+            {
+                mediaFilesQuery = mediaFilesQuery.Where(f => f.FileType == query.FileType);
+            }
+
+            // Lọc theo kích thước file nếu có
+            if (query.FileSize > 0)
+            {
+                mediaFilesQuery = mediaFilesQuery.Where(f => f.FileSize == query.FileSize);
+            }
+
+            // Lọc theo OwnerId nếu có
+            if (query.OwnerId.HasValue)
+            {
+                mediaFilesQuery = mediaFilesQuery.Where(f => f.OwnerId == query.OwnerId);
+            }
+
+            // Thực hiện phân trang bằng PaginatedList
+            var paginatedCategories = await PaginatedList<MediaFileDto>.CreateAsync(
+                mediaFilesQuery.ProjectTo<MediaFileDto>(_mapper.ConfigurationProvider),
+                query.PageNumber,
+                query.PageSize
+            );
+            return paginatedCategories;
         }
     }
 }

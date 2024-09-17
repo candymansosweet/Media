@@ -1,4 +1,6 @@
 ﻿using Application;
+using Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Prodcut.API;
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<FileSettings>(builder.Configuration.GetSection("FileSettings"));
 
 builder.Services
+    .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .AddWebAPI();
 
