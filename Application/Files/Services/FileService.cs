@@ -77,7 +77,6 @@ namespace Application.Files.Services
         }
         public async Task<string> DeleteFile(int id)
         {
-            var aaa = _context.MediaFiles;
             var mediaFile = await _context.MediaFiles.FirstOrDefaultAsync(m => m.Id == id); ;
             if (mediaFile == null)
             {

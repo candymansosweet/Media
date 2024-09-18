@@ -3,6 +3,7 @@ using Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Prodcut.API;
+using Web.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 // Đăng ký FileSettings từ appsettings.json
@@ -15,6 +16,7 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseMiddleware<ErrorHandlerMiddleware>();
 // Cho phép phục vụ các tệp tĩnh từ thư mục "Uploads"
 var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
 if (!Directory.Exists(uploadFolder))
