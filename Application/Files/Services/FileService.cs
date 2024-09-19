@@ -49,18 +49,6 @@ namespace Application.Files.Services
         public async Task<string> UploadFile(FileUpload fileDto)
         {
             string dateTimeUpload = FormatToString.FormatToPath("dd/MM/yyyy");
-            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload);
-            // Tạo thư mục nếu chưa tồn tại
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath); // Chỉ tạo thư mục
-            }
-            // Tạo đường dẫn đến file (bao gồm cả tên file)
-            var filePath = Path.Combine(directoryPath, fileDto.file.FileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileDto.file.CopyToAsync(stream);
-            }
             var relativePath = Path.Combine("Uploads", fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload, fileDto.file.FileName).Replace("\\", "/");
             // Lưu thông tin file vào SQL Server
             var mediaFile = new MediaFile
@@ -73,24 +61,37 @@ namespace Application.Files.Services
             };
             _context.MediaFiles.Add(mediaFile);
             await _context.SaveChangesAsync();
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, fileDto.ModuleName, fileDto.ObjectName, dateTimeUpload);
+            // Tạo thư mục nếu chưa tồn tại
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath); // Chỉ tạo thư mục
+            }
+            // Tạo đường dẫn đến file (bao gồm cả tên file)
+            var filePath = Path.Combine(directoryPath, fileDto.file.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileDto.file.CopyToAsync(stream);
+            }
             return relativePath;
         }
         public async Task<string> DeleteFile(int id)
         {
-            var mediaFile = await _context.MediaFiles.FirstOrDefaultAsync(m => m.Id == id); ;
+            var mediaFile = await _context.MediaFiles.FirstOrDefaultAsync(m => m.Id == id);
             if (mediaFile == null)
             {
                 throw new AppException(ExceptionCode.Notfound, "Không tìm thấy media");
             }
             var path = mediaFile.FilePath.Replace("/", "\\");
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), path);
+            System.IO.File.Delete(filePath);
+            _context.MediaFiles.Remove(mediaFile);
+            await _context.SaveChangesAsync();
+
             if (!System.IO.File.Exists(filePath))
             {
                 throw new AppException(ExceptionCode.Notfound, "Đường dẫn không đúng");
             }
-            System.IO.File.Delete(filePath);
-            _context.MediaFiles.Remove(mediaFile);
-            await _context.SaveChangesAsync();
             return filePath;
         }
 

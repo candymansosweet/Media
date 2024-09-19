@@ -6,6 +6,12 @@ using Prodcut.API;
 using Web.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+var a = builder.Environment.EnvironmentName;
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 // Đăng ký FileSettings từ appsettings.json
 builder.Services.Configure<FileSettings>(builder.Configuration.GetSection("FileSettings"));
 
@@ -13,6 +19,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .AddWebAPI();
+
 
 var app = builder.Build();
 
@@ -32,7 +39,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
