@@ -23,6 +23,7 @@ x86/
 bld/
 [Bb]in/
 [Uu]ploads/
+credentials.json
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1700A204-59AD-4F77-B458-34CEB2944185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleDriveApi.file", "GoogleDriveApi.file\GoogleDriveApi.file.csproj", "{7B632524-2A0F-41F7-8D31-3C6BD0BFA8FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleDriveApi.file", "GoogleDriveApi.file\GoogleDriveApi.file.csproj", "{7B632524-2A0F-41F7-8D31-3C6BD0BFA8FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
