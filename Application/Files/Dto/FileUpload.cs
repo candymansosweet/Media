@@ -8,9 +8,7 @@ namespace Application.Files.Dto
         [FromQuery]
         public string ModuleName { get; set; }
         [FromQuery]
-        public string ObjectName { get; set; }
-        [FromQuery]
-        public Guid? OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
         [FromForm]
         public IFormFile file { get; set; }
     }

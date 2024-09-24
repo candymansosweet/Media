@@ -8,6 +8,7 @@
 
   <ItemGroup>
 	<!--migration + use Entity Framework .Net 7--> 
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3533" /> 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

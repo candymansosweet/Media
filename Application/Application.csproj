@@ -17,8 +17,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Unitilities\Unitilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Files\ResponeDtos\" />
+    <Folder Include="Files\RequestDtos\" />
   </ItemGroup>
 
 </Project>
