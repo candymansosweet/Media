@@ -8,5 +8,6 @@ namespace Application.Models.FileDtos
 {
     public class FileDownloadDto
     {
+
     }
 }
