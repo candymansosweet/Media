@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Files.Dto
 {
-    public class MediaFileDto: IMapFrom<MediaFile>
+    public class MediaFileDto: IMapFrom<FileRecord>
     {
         public int Id { get; set; }
         public string FileName { get; set; }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Folders.RequestDtos
+﻿namespace Application.Models.PathDtos
 {
     public class PathDto
     {
@@ -12,5 +6,6 @@ namespace Application.Folders.RequestDtos
         public Guid OwnerId { get; set; }
         // Module nào
         public string ModuleName { get; set; }
+        public string? Url { get; set; }
     }
 }

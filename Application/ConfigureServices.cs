@@ -1,5 +1,7 @@
-﻿using Application.Files.Services;
-using Application.Folders.Services;
+﻿using Application.Factories;
+using Application.Files.Services;
+using Application.Interfaces;
+using Application.Services.FolderServices;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -13,7 +15,8 @@ namespace Application
             // Đăng ký MediatR với Assembly hiện tại (Application)
             services.AddAutoMapper(assembly);
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<IFolderService, FolderService>();
+            services.AddScoped<IPathService, PathService>();
+            services.AddScoped<IFileStorageFactory, FileStorageFactory>();
             return services;
         }
     }

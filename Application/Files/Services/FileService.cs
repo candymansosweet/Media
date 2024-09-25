@@ -6,7 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Common.Exceptions;
 using Common.Models;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Unitilities.DateTimeUnitilities;
@@ -59,7 +59,7 @@ namespace Application.Files.Services
             var id = Guid.NewGuid();
             var relativePath = Path.Combine(folder.Path, id.ToString());
             // Lưu thông tin file vào SQL Server
-            var mediaFile = new MediaFile
+            var mediaFile = new FileRecord
             {
                 Id = id,
                 FileName = fileDto.file.FileName,

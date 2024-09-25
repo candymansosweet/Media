@@ -1,11 +1,11 @@
 ﻿using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Design;
 using System.Collections.Generic;
 
-namespace Infrastructure
+namespace Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
@@ -13,7 +13,7 @@ namespace Infrastructure
         {
 
         }
-        public DbSet<MediaFile> MediaFiles { get; set; }
+        public DbSet<FileRecord> FileRecords { get; set; }
         // ghi đè để trước khi lưu data, cập nhật ngày tháng
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

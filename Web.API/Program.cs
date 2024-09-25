@@ -1,6 +1,5 @@
 ﻿using Application;
 using Infrastructure;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Prodcut.API;
 using Web.API.Middlewares;
