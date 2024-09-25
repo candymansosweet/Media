@@ -1,4 +1,4 @@
-﻿using Application.Models.FileDto;
+﻿using Application.Models.FileDtos;
 using Common.Models;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -31,7 +31,7 @@ namespace Application.Repositories.FileRecordRepository
             if (existingRecord != null)
             {
                 existingRecord.FileName = fileRecord.FileName;
-                existingRecord.FilePath = fileRecord.FilePath;
+                existingRecord.IdOnService = fileRecord.IdOnService;
                 existingRecord.FileType = fileRecord.FileType;
                 existingRecord.FileSize = fileRecord.FileSize;
                 existingRecord.UpdatedBy = fileRecord.UpdatedBy;
@@ -72,7 +72,7 @@ namespace Application.Repositories.FileRecordRepository
 
             if (!string.IsNullOrEmpty(fileRecordQuery.FilePath))
             {
-                query = query.Where(f => f.FilePath.Contains(fileRecordQuery.FilePath));
+                query = query.Where(f => f.IdOnService.Contains(fileRecordQuery.FilePath));
             }
             return await PaginatedList<FileRecord>.CreateAsync(
                 query,

@@ -1,4 +1,4 @@
-﻿using Application.Models.FileDto;
+﻿using Application.Models.FileDtos;
 using Common.Models;
 using Domain.Entities;
 

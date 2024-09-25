@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Folders.RequestDtos
+namespace Application.Models.FileDtos
 {
-    public class QueryFolderDto
+    public class FileDownloadDto
     {
     }
 }
