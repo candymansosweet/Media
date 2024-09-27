@@ -1,11 +1,11 @@
-﻿using Application.Models.FileDtos;
+﻿using Application.FileStorageService.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces
+namespace Application.FileStorageService.Interfaces
 {
     public interface IFileStorageService
     {

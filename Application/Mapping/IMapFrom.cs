@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common.Mapping
+namespace Application.Mapping
 {
-    //map dữ liệu của instance hiện tại ( instacnce đang triển khai interface này ) vào T 
-    public interface IMapTo<T>
+    public interface IMapFrom<T>
     {
         void Mapping(Profile profile)
         {
-            profile.CreateMap(GetType(), typeof(T)).ForAllMembers(opts =>
+            profile.CreateMap(typeof(T), GetType()).ForAllMembers(opts =>
             {
                 opts.Condition((src, dest, srcMember) =>
                 {

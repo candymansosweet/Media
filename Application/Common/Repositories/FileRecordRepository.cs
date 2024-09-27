@@ -1,9 +1,10 @@
-﻿using Application.Models.FileDtos;
+﻿using Application.FileStorageService.Requests;
+using Common.Exceptions;
 using Common.Models;
 using Domain.Entities;
 using Infrastructure.Persistence;
 
-namespace Application.Repositories.FileRecordRepository
+namespace Application.Common.Repositories
 {
     public class FileRecordRepository : IFileRecordRepository
     {
@@ -17,7 +18,15 @@ namespace Application.Repositories.FileRecordRepository
         public async Task AddAsync(FileRecord fileRecord)
         {
             _context.FileRecords.Add(fileRecord);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                throw new AppException(ExceptionCode.Invalidate, ex.Message);
+            }
         }
 
         public async Task<FileRecord> GetByIdAsync(Guid id)

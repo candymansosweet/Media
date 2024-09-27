@@ -1,6 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.FileStorageService.FileStorageServices;
+using Application.FileStorageService.Interfaces;
 using Application.Services;
-using Application.Services.FileStorageServices;
 using Common.Constants;
 using Microsoft.Extensions.DependencyInjection;
 using System;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Models.FileDtos
+namespace Application.FileStorageService.Requests
 {
     public class FileRecordQuery : BasePaginatedQuery
     {

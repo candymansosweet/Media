@@ -11,6 +11,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
+
 // Đăng ký FileSettings từ appsettings.json
 builder.Services.Configure<FileSettings>(builder.Configuration.GetSection("FileSettings"));
 
@@ -22,27 +23,31 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
-// Cho phép phục vụ các tệp tĩnh từ thư mục "Uploads"
-var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+
+#region config Static Files
+FileSettings fileSettings = builder.Configuration.GetSection("FileSettings").Get<FileSettings>();
+var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), fileSettings.UploadPath);
 if (!Directory.Exists(uploadFolder))
 {
     Directory.CreateDirectory(uploadFolder);
 }
-
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(uploadFolder),
-    RequestPath = "/Uploads"
+    RequestPath = "/" + fileSettings.UploadPath
 });
+#endregion
 
-
+#region enviroment
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+#endregion
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

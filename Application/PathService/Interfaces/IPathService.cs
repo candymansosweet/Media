@@ -1,6 +1,6 @@
-﻿using Application.Models.PathDtos;
+﻿using Application.PathService.Requests;
 
-namespace Application.Interfaces
+namespace Application.PathService.Interfaces
 {
     public interface IPathService
     {

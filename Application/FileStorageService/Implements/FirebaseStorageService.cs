@@ -1,7 +1,7 @@
-﻿using Application.Interfaces;
-using Application.Models.FileDto;
+﻿using Application.FileStorageService.Interfaces;
+using Application.FileStorageService.Requests;
 
-namespace Application.Services.FileStorageServices
+namespace Application.FileStorageService.FileStorageServices
 {
     public class FirebaseStorageService : IFileStorageService
     {

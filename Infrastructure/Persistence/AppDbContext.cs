@@ -22,32 +22,40 @@ namespace Infrastructure.Persistence
         }
         private void OnBeforeSaving() // function your's define
         {
-            IEnumerable<EntityEntry> entries = ChangeTracker.Entries();
-            DateTime utcNow = DateTime.UtcNow;
-
-            foreach (EntityEntry entry in entries)
+            try
             {
-                switch (entry.State)
+                IEnumerable<EntityEntry> entries = ChangeTracker.Entries();
+                DateTime utcNow = DateTime.UtcNow;
+
+                foreach (EntityEntry entry in entries)
                 {
-                    case EntityState.Modified:
-                        // Set UpdatedDate to current date/time for updated entities
-                        entry.Property("UpdatedDate").CurrentValue = utcNow;
-                        break;
-                    case EntityState.Added:
-                        // Set CreatedDate and UpdatedDate to current date/time for new entities
-                        entry.Property("CreatedDate").CurrentValue = utcNow;
-                        entry.Property("UpdatedDate").CurrentValue = utcNow;
-                        break;
-                    case EntityState.Detached:
-                        break;
-                    case EntityState.Unchanged:
-                        break;
-                    case EntityState.Deleted:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    switch (entry.State)
+                    {
+                        case EntityState.Modified:
+                            // Set UpdatedDate to current date/time for updated entities
+                            entry.Property("UpdatedDate").CurrentValue = utcNow;
+                            break;
+                        case EntityState.Added:
+                            // Set CreatedDate and UpdatedDate to current date/time for new entities
+                            entry.Property("CreatedDate").CurrentValue = utcNow;
+                            entry.Property("UpdatedDate").CurrentValue = utcNow;
+                            break;
+                        case EntityState.Detached:
+                            break;
+                        case EntityState.Unchanged:
+                            break;
+                        case EntityState.Deleted:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+
         }
     }
 }

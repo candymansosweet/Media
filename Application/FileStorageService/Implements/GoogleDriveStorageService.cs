@@ -1,10 +1,10 @@
-﻿using Application.Interfaces;
-using Application.Models.FileDto;
+﻿using Application.FileStorageService.Interfaces;
+using Application.FileStorageService.Requests;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 
-namespace Application.Services.FileStorageServices
+namespace Application.FileStorageService.FileStorageServices
 {
     public class GoogleDriveStorageService : IFileStorageService
     {

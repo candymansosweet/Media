@@ -1,4 +1,4 @@
-﻿namespace Application.Models.PathDtos
+﻿namespace Application.PathService.Requests
 {
     public class PathDto
     {

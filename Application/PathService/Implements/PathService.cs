@@ -1,11 +1,11 @@
-﻿using Application.Interfaces;
-using Application.Models.PathDtos;
+﻿using Application.PathService.Interfaces;
+using Application.PathService.Requests;
 using AutoMapper;
 using Infrastructure;
 using Microsoft.Extensions.Options;
 using Unitilities.DateTimeUnitilities;
 
-namespace Application.Services.FolderServices
+namespace Application.PathService.Implements
 {
     public class PathService : IPathService
     {
@@ -21,7 +21,7 @@ namespace Application.Services.FolderServices
             {
                 ModuleName = createFolderDto.ModuleName,
                 OwnerId = createFolderDto.OwnerId,
-                Url = Path.Combine(Directory.GetCurrentDirectory(), _uploadPath, createFolderDto.OwnerId.ToString(), createFolderDto.ModuleName, dateTimeUpload[2], dateTimeUpload[1], dateTimeUpload[0])
+                Url = Path.Combine(_uploadPath, createFolderDto.OwnerId.ToString(), createFolderDto.ModuleName, dateTimeUpload[2], dateTimeUpload[1], dateTimeUpload[0])
             };
         }
     }

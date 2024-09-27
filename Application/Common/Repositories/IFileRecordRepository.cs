@@ -1,8 +1,8 @@
-﻿using Application.Models.FileDtos;
+﻿using Application.FileStorageService.Requests;
 using Common.Models;
 using Domain.Entities;
 
-namespace Application.Repositories.FileRecordRepository
+namespace Application.Common.Repositories
 {
     public interface IFileRecordRepository
     {

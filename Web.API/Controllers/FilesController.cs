@@ -1,16 +1,17 @@
-﻿using Application.Factories;
-using Application.Files.Services;
-using Application.Interfaces;
+﻿using Application.Common.Repositories;
+using Application.Common.Repositories.FileRecordRepository;
+using Application.Factories;
+using Application.FileStorageService.Requests;
 using Application.Models.FileDtos;
-using Application.Repositories.FileRecordRepository;
-using Application.Services.FolderServices;
+using Application.Models.PathDtos;
+using Application.PathService.Interfaces;
 using Common.Constants;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.IO;
 using System.Threading.Tasks;
-public class 
+
 [ApiController]
 [Route("api/[controller]")]
 public class FileController : ControllerBase
@@ -33,45 +34,19 @@ public class FileController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(
-        [FromForm] IFormFile file, 
-        [FromQuery] EnumValue.FileServiceType storageType, 
-        [FromQuery] Guid ownerId, 
-        [FromQuery] string moduleName
-    )
+    public async Task<IActionResult> UploadFile([FromForm] FileUploadDto fileUpload)
     {
-        Application.Models.PathDtos.PathDto path = await _pathService.CreatePath(new Application.Models.PathDtos.PathDto()
-        {
-            OwnerId = ownerId,
-            ModuleName = moduleName
-        });
-        var storageService = _storageFactory.GetStorageService(storageType);
-        using (var stream = file.OpenReadStream())
-        {
 
-            var fileUrl = await storageService.UploadFileAsync(new Application.Models.FileDtos.FileUploadDto()
-            {
-                fileName = file.FileName,
-                fileStream = stream,
-                path = path.Url
-            });
-
-            var fileRecord = new FileRecord()
-            {
-                FileName = file.FileName,
-                IdOnService = fileUrl,
-                FileType = file.ContentType,
-                FileSize = file.Length,
-                ServiceType = (int) storageType,
-                OwnerId = ownerId,
-            };
-            await _fileRecordRepository.AddAsync(fileRecord);
-            return Ok(fileRecord);
+        var storageService = _storageFactory.GetStorageService(fileUpload.storageType);
+        using (var stream = fileUpload.file.OpenReadStream())
+        {
+            var fileUrl = await storageService.UploadFileAsync(fileUpload);
+            return Ok(fileUrl);
         }
     }
 
     // Download file
-    [HttpGet("download-by-infor")]
+    [HttpGet("download")]
     public async Task<IActionResult> DownloadFile(
         [FromQuery] string idOnServer,
         [FromQuery] EnumValue.FileServiceType storageType
@@ -80,17 +55,4 @@ public class FileController : ControllerBase
         var storageService = _storageFactory.GetStorageService(storageType);
         return File(await storageService.DownloadFileAsync(idOnServer), "application/octet-stream");
     }
-    //[HttpGet("download-by-path")]
-    //public IActionResult DownloadFile(string fileDown)
-    //{
-    //    byte[] fileBytes = _fileService.DownloadFile(fileDown);
-    //    return File(fileBytes, "application/octet-stream", fileDown);
-    //}
-
-    //// Delete file
-    //[HttpDelete("delete")]
-    //public async Task<IActionResult> DeleteFile(int id)
-    //{
-    //    return Ok(await _fileService.DeleteFile(id));
-    //}
 }

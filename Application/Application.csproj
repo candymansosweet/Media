@@ -21,4 +21,9 @@
     <ProjectReference Include="..\Unitilities\Unitilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FileStorageService\Respones\" />
+    <Folder Include="PathService\Respones\" />
+  </ItemGroup>
+
 </Project>
