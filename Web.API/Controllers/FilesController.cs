@@ -1,9 +1,6 @@
 ﻿using Application.Common.Repositories;
-using Application.Common.Repositories.FileRecordRepository;
 using Application.Factories;
 using Application.FileStorageService.Requests;
-using Application.Models.FileDtos;
-using Application.Models.PathDtos;
 using Application.PathService.Interfaces;
 using Common.Constants;
 using Domain.Entities;
