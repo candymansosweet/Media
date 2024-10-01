@@ -93,28 +93,27 @@ namespace Application.FileStorageService.FileStorageServices
             // Tạo metadata cho file sẽ upload lên Google Drive
             var fileMetadata = new Google.Apis.Drive.v3.Data.File
             {
-                Name = fileUploadDto.fileName
+                Name = fileUploadDto.file.FileName
             };
             // Sử dụng stream trực tiếp thay vì gọi OpenReadStream()
-            var request = service.Files.Create(fileMetadata, fileUploadDto.fileStream, "application/octet-stream");
-
-
-            // Chỉ định rằng chỉ lấy trường "id" từ kết quả phản hồi
-            // Google Drive sẽ trả về thông tin về file sau khi upload, nhưng ở đây chỉ cần lấy ID của file.
-            request.Fields = "id";
-
-            // Thực hiện upload và chờ kết quả
-            var fileResult = await request.UploadAsync();
-
-            // Kiểm tra nếu quá trình upload thất bại
-            if (fileResult.Status == Google.Apis.Upload.UploadStatus.Failed)
+            using(var stream = fileUploadDto.file.OpenReadStream())
             {
-                // Nếu thất bại, ném ra một exception với thông báo lỗi từ Google API
-                throw new Exception($"File upload failed: {fileResult.Exception.Message}");
-            }
+                var request = service.Files.Create(fileMetadata, fileUploadDto.file., "application/octet-stream");
+                // Chỉ định rằng chỉ lấy trường "id" từ kết quả phản hồi
+                // Google Drive sẽ trả về thông tin về file sau khi upload, nhưng ở đây chỉ cần lấy ID của file.
+                request.Fields = "id";
 
-            // Nếu thành công, trả về file ID từ Google Drive
-            return request.ResponseBody.Id;
+                // Thực hiện upload và chờ kết quả
+                var fileResult = await request.UploadAsync();
+                // Kiểm tra nếu quá trình upload thất bại
+                if (fileResult.Status == Google.Apis.Upload.UploadStatus.Failed)
+                {
+                    // Nếu thất bại, ném ra một exception với thông báo lỗi từ Google API
+                    throw new Exception($"File upload failed: {fileResult.Exception.Message}");
+                }
+                // Nếu thành công, trả về file ID từ Google Drive
+                return request.ResponseBody.Id;
+            }
         }
     }
 
